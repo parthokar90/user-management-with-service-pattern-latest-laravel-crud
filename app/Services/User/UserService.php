@@ -4,6 +4,7 @@ namespace App\Services\User;
 
 use App\Models\User;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 use Yajra\DataTables\DataTables;
 
 class UserService implements UserServiceInterface
@@ -36,6 +37,9 @@ class UserService implements UserServiceInterface
 
     public function createUser(array $data)
     {
+        if (isset($data['avatar'])) {
+            $data['avatar'] = $this->uploadAvatar($data['avatar']);
+        }
         return User::create($data);
     }
 
@@ -47,6 +51,16 @@ class UserService implements UserServiceInterface
     public function updateUser(int $id, array $data)
     {
         $user = User::findOrFail($id);
+
+        if (isset($data['avatar'])) {
+            $data['avatar'] = $this->uploadAvatar($data['avatar']);
+            if ($user->avatar) {
+                $avatarPath = public_path('backend/avatar/') . $user->avatar;
+                if (File::exists($avatarPath)) {
+                    File::delete($avatarPath);
+                }
+            }
+        }
 
         $user->update($data);
 
@@ -114,4 +128,14 @@ class UserService implements UserServiceInterface
         return User::onlyTrashed()->restore();
     }
 
+
+    protected function uploadAvatar($avatar)
+    {
+        
+        $filename = time() . '_' . uniqid() . '.' . $avatar->getClientOriginalExtension();
+
+        $avatar->move(public_path('backend/avatar'), $filename);
+
+        return $filename;
+    }
 }

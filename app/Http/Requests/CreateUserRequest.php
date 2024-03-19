@@ -20,6 +20,10 @@ class CreateUserRequest extends FormRequest
             'password' => 'required|min:8',
         ];
 
+        if ($this->hasFile('avatar')) {
+            $rules['avatar'] = 'image|mimes:jpeg,png,jpg,gif|max:2048'; 
+        }
+
         return $rules;
     }
 }
