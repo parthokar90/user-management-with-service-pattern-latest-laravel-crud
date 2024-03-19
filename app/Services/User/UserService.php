@@ -3,8 +3,9 @@
 namespace App\Services\User;
 
 use App\Models\User;
+
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
+
 use Yajra\DataTables\DataTables;
 
 class UserService implements UserServiceInterface
@@ -131,7 +132,6 @@ class UserService implements UserServiceInterface
 
     protected function uploadAvatar($avatar)
     {
-        
         $filename = time() . '_' . uniqid() . '.' . $avatar->getClientOriginalExtension();
 
         $avatar->move(public_path('backend/avatar'), $filename);

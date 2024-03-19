@@ -12,7 +12,6 @@ Route::middleware('auth')->group(function () {
 
     //profile route
     require __DIR__ . '/backend/user/profile/profile_route.php';
-
 });
 
 //auth route
