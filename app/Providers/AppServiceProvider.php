@@ -7,6 +7,14 @@ use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
+
+    protected $listen = [
+        // Register your events and listeners here
+        'App\Events\UserStore' => [
+            'App\Listeners\UserStoreListener',
+        ],
+    ];
+
     /**
      * Register any application services.
      */

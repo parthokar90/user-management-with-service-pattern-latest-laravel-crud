@@ -3,10 +3,7 @@
 namespace App\Services\User;
 
 use App\Models\User;
-
 use Illuminate\Support\Facades\File;
-use App\Http\Requests\CreateUserRequest;
-use App\Http\Requests\UpdateUserRequest;
 use Yajra\DataTables\DataTables;
 
 class UserService implements UserServiceInterface
