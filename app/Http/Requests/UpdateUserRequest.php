@@ -13,12 +13,22 @@ class UpdateUserRequest extends FormRequest
 
     public function rules()
     {
-        $userId = $this->route('user'); 
-    
-        return [
+        $userId = $this->route('user');
+
+        $rules = [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $userId,
         ];
+
+        if ($this->filled('password')) {
+            $rules['password'] = 'string|min:8';
+        }
+
+        if ($this->hasFile('avatar')) {
+            $rules['avatar'] = 'image|max:2048'; 
+        }
+
+        return $rules;
     }
     
 }
