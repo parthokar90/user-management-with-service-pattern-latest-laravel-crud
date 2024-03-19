@@ -9,9 +9,11 @@ class AppServiceProvider extends ServiceProvider
 {
 
     protected $listen = [
-        // Register your events and listeners here
         'App\Events\UserStore' => [
             'App\Listeners\UserStoreListener',
+        ],
+        'App\Events\UserUpdate' => [
+            'App\Listeners\UserUpdateListener',
         ],
     ];
 

@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Events\UserStore;
+use App\Events\UserUpdate;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -54,12 +55,19 @@ class User extends Authenticatable
         return $this->hasMany(UserAddress::class);
     }
 
-    protected static function boot()
+
+    public static function boot()
     {
         parent::boot();
 
-        self::saved(function ($user) {
+        self::created(function ($user) {
             UserStore::dispatch($user);
         });
+
+        self::updated(function ($user) {
+            UserUpdate::dispatch($user);
+        });
     }
+
+
 }
