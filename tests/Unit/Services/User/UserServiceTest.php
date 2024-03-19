@@ -1,8 +1,6 @@
 <?php
 
 namespace Tests\Unit\Services\User;
-
-use App\Http\Controllers\UserController;
 use App\Models\User;
 use App\Services\User\UserService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -22,7 +20,7 @@ class UserServiceTest extends TestCase
         $this->userService = new UserService();
     }
 
-    public function test_get_users_for_data_table()
+    public function testGetUser()
     {
         $response = $this->userService->getUsersForDataTable();
 
@@ -30,7 +28,7 @@ class UserServiceTest extends TestCase
     }
 
 
-    public function test_add_new_user()
+    public function testAddUser()
     {
         $user = User::factory()->create();
 
@@ -48,7 +46,28 @@ class UserServiceTest extends TestCase
         $this->assertDatabaseHas('users', ['email' => $payload['email']]);
     }
 
-    public function test_trash_user_route()
+    public function testUpdateUser()
+    {
+        $user = User::factory()->create();
+
+        $updatedUserData = [
+            'name' => 'Updated Name',
+            'email' => 'updated@example.com',
+        ];
+
+        $response = $this->actingAs($user)
+            ->putJson("/users/{$user->id}", $updatedUserData);
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('users.index'));
+        $this->assertDatabaseHas('users', [
+            'id' => $user->id,
+            'name' => $updatedUserData['name'],
+            'email' => $updatedUserData['email'],
+        ]);
+    }
+
+    public function testTrashUser()
     {
         $user = User::factory()->create();
 
@@ -58,7 +77,7 @@ class UserServiceTest extends TestCase
         $response->assertStatus(200); 
     }
 
-    public function test_restore_user_route()
+    public function testRestoreUser()
     {
         $user = User::factory()->create();
         $trashedUser = User::factory()->trashed()->create();
@@ -71,7 +90,7 @@ class UserServiceTest extends TestCase
         $this->assertDatabaseHas('users', ['id' => $trashedUser->id]);
     }
 
-    public function test_permanent_delete_route()
+    public function testPermanentDeleteUser()
     {
         $user = User::factory()->create();
         $trashedUser = User::factory()->trashed()->create();
