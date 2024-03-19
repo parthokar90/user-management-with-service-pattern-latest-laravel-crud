@@ -1,7 +1,7 @@
 <?php
 
 namespace Database\Seeders;
-
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 
@@ -12,10 +12,12 @@ class UserTableSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
-            'name' => 'Admin',
-            'email' => 'admin@email.com',
-            'password' => bcrypt('12345678'),
-        ]);
+        if (User::count() === 0) {
+            User::create([
+                'name' => 'Admin',
+                'email' => 'admin@email.com',
+                'password' => Hash::make('12345678'),
+            ]);
+        }
     }
 }
